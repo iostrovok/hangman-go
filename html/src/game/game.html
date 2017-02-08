@@ -1,0 +1,37 @@
+<div class="blog-header">
+    <p class="lead blog-description"></p>
+</div>
+<div class="row" ng-show="gameCtrl.userData.viewData">
+    <div class="col-sm-6 blog-main">
+        <div class="blog-post" >
+            <p>Games lost/win {{gameCtrl.userData.losings}}/{{gameCtrl.userData.wins}}</p>
+            <p><strong>Your Word: {{gameCtrl.userData.view_word}} / {{gameCtrl.userData.last_letters}}</strong></p>
+            <form class="form-inline" ng-show="gameCtrl.userData.inGame" ng-show="gameCtrl.userData.inGame">
+                <div class="form-group">
+                    <label class="sr-only" for="newLetter">Letter</label>
+                    <div class="input-group">
+                        <input type="text" class="form-control" id="newLetter" name="newLetter" placeholder="Letter" ng-model="gameCtrl.letter">
+                    </div>
+                </div>
+                <button type="submit" class="btn btn-primary" ng-click="gameCtrl.submit()">Turn</button>
+            </form>
+            <p ng-show="gameCtrl.userData.viewError" class="danger">
+                <strong>{{gameCtrl.userData.error_message}}</strong>
+            </p>
+            <p ng-show="gameCtrl.userData.isWinner" class="success">
+                You won! Word is <strong>{{gameCtrl.userData.last_word}}</strong>
+                <button type="submit" class="btn btn-primary" ng-click="gameCtrl.newGame()">New Game</button>
+            </p>
+            <p ng-show="gameCtrl.userData.isLoser" class="danger">
+                You lost! Word is <strong>{{gameCtrl.userData.last_word}}</strong>
+                <button type="submit" class="btn btn-primary" ng-click="gameCtrl.newGame()">New Game</button>
+            </p>
+        </div>
+    </div>
+    <div class="col-sm-6 blog-main">
+        <div class="blog-post" >
+            <img width="200" height="200" class="img-rounded" border="1" ng-src="/html/images/hangman-{{gameCtrl.userData.attempt}}.png">
+        </div>
+    </div>
+</div>
+<!-- /.row -->

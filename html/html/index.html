@@ -7,17 +7,16 @@
         <!-- The above 3 meta tags *must* come first in the head; any other head content must come *after* these tags -->
         <meta name="description" content="">
         <meta name="author" content="">
-        <link rel="icon" href="favicon.png">
-        <title>Blog Template for Bootstrap</title>
+        <link rel="icon" href="/html/images/favicon.png">
+        <title>Hangman game</title>
         <!-- Bootstrap core CSS -->
-        <link href="/css/bootstrap.min.css" rel="stylesheet">
+        <link href="/html/css/bootstrap.min.css" rel="stylesheet">
         <!-- IE10 viewport hack for Surface/desktop Windows 8 bug -->
-        <link href="/css/ie10-viewport-bug-workaround.css" rel="stylesheet">
+        <link href="/html/css/ie10-viewport-bug-workaround.css" rel="stylesheet">
         <!-- Custom styles for this template -->
-        <link href="/css/main.css" rel="stylesheet">
-        <!-- Just for debugging purposes. Don't actually copy these 2 lines! -->
-        <!--[if lt IE 9]><script src="/lib/ie8-responsive-file-warning.js"></script><![endif]-->
-        <script src="/lib/ie-emulation-modes-warning.js"></script>
+        <link href="/html/css/main.css" rel="stylesheet">
+        <!--[if lt IE 9]><script src="/html/lib/ie8-responsive-file-warning.js"></script><![endif]-->
+        <script src="/html/lib/ie-emulation-modes-warning.js"></script>
         <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
         <!--[if lt IE 9]>
             <script src="https://oss.maxcdn.com/html5shiv/3.7.3/html5shiv.min.js"></script>
@@ -29,10 +28,7 @@
             <div class="container">
                 <nav class="blog-nav">
                     <a class="blog-nav-item active" ui-sref="public.home">Home</a>
-                    <a class="blog-nav-item" ui-sref="public.mywords">Words</a>
-                    <a class="blog-nav-item" ui-sref="public.mywords-add">Add word</a>
-                    <a class="blog-nav-item" ui-sref="public.menu">New hires</a>
-                    <a class="blog-nav-item" ui-sref="public.menu">About</a>
+                    <a class="blog-nav-item" ui-sref="public.game">My Game</a>
                 </nav>
             </div>
         </div>
@@ -44,46 +40,25 @@
             </ui-view>
             <!-- /.row -->
         </div>
-        <!-- /.container -->
-        <footer class="blog-footer">
-            <p>Blog template built for <a href="http://getbootstrap.com">Bootstrap</a> by <a href="https://twitter.com/mdo">@mdo</a>.</p>
-            <p>
-                <a href="#">Back to top</a>
-            </p>
-        </footer>
         <!-- Bootstrap core JavaScript
         ================================================== -->
         <!-- Placed at the end of the document so the pages load faster -->
-        <script src="/lib/jquery-2.1.4.min.js"></script>
-        <script>
-            window.jQuery || document.write('<script src="../../assets/js/vendor/jquery.min.js"><\/script>')
-        </script>
-        <script src="/lib/bootstrap.min.js"></script>
+        <script src="/html/lib/jquery-2.1.4.min.js"></script>
+        <script src="/html/lib/bootstrap.min.js"></script>
         <!-- IE10 viewport hack for Surface/desktop Windows 8 bug -->
-        <script src="/lib/ie10-viewport-bug-workaround.js"></script>
+        <script src="/html/lib/ie10-viewport-bug-workaround.js"></script>
         <!-- Libs -->
-        <script src="/lib/angular.min.js"></script>
-        <script src="/lib/angular-ui-router.min.js"></script>
-        <script src="/lib/ng-file-upload/ng-file-upload-shim.min.js"></script>
-        <script src="/lib/ng-file-upload/ng-file-upload.min.js"></script>
+        <script src="/html/lib/angular.min.js"></script>
+        <script src="/html/lib/angular-ui-router.min.js"></script>
         <!-- Common Module -->
-        <script src="/src/common/common.module.js"></script>
-        <script src="/src/common/loading/loading.interceptor.js"></script>
-        <script src="/src/common/loading/loading.component.js"></script>
-        <script src="/src/common/load_from_site.service.js"></script>
-        <script src="/src/common/word_save.service.js"></script>
-        <script src="/src/common/user.data.service.js"></script>
+        <script src="/html/src/common/common.module.js"></script>
+        <script src="/html/src/common/loading/loading.interceptor.js"></script>
+        <script src="/html/src/common/game.data.service.js"></script>
         <!-- Main Restaurant Module -->
-        <script src="src/words.module.js"></script>
+        <script src="/html/src/game.module.js"></script>
         <!-- Public Module -->
-        <script src="src/public/public.module.js"></script>
-        <script src="src/public/public.routes.js"></script>
-        <script src="src/public/right-sidebar/right-sidebar.component.js"></script>
-        <script src="/src/public/mywords/translate-input/translate-input.component.js"></script>
-        <script src="/src/public/mywords/transcript-input/transcript-input.component.js"></script>
-        <script src="/src/public/user/login/user.login.component.js"></script>
-        <script src="/src/public/mywords/mywords.controller.js"></script>
-        <!-- ADMIN SITE -->
-        <script src="src/admin/admin.module.js"></script>
+        <script src="/html/src/public.module.js"></script>
+        <script src="/html/src/public.routes.js"></script>
+        <script src="/html/src/game/game.controller.js"></script>
     </body>
 </html>

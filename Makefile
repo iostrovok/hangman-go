@@ -13,5 +13,5 @@ install:
 
 start:
 	@echo "Start server" 
-	./bin/index -img ${CURDIR}/html/
+	./bin/index -img ${CURDIR}
 
