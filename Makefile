@@ -21,3 +21,7 @@ start:
 	@echo "Start server" 
 	./bin/index -dir ${CURDIR} -port 19720
 
+test:
+	@echo "test server"
+	go get gopkg.in/check.v1 
+	go test ./src/game/

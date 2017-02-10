@@ -1,4 +1,4 @@
-package Session
+package Game
 
 import (
 	"math/rand"

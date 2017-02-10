@@ -1,4 +1,22 @@
-package Session
+package Game
+
+/*
+
+"Game struct" is a state machine which has 4 states: “”, “is_play_now”, “winner”, “loser”.
+“” is default state.
+
+Existing events:
+
+“loser” -> NewWord -> “is_play_now”
+“winner” -> NewWord -> “is_play_now”
+“” -> NewWord -> “is_play_now”
+“is_play_now” -> Move -> “is_play_now”
+“is_play_now” -> Move -> “winner” // player found all letters
+“is_play_now” -> Move -> “loser” // count of attempts > 9
+
+Each input (Move, NewWord) returns a data, which is returned to player.
+
+*/
 
 import (
 	"errors"
@@ -11,10 +29,15 @@ import (
 
 var clenerReg = regexp.MustCompile(`[^a-zA-Z]`)
 
-const CountAttempt = 9
+const CountAttempt = 10
+const KeyLength = 10
+const LiveTimeSec = 60 * 60 * 24 // 1 day
 
-type UserGame struct {
+type Game struct {
 	sync.RWMutex
+
+	// currently state. Can be “”, “is_play_now”, “winner”, “loser”
+	last_state string
 
 	ID            string
 	exp           time.Time
@@ -28,13 +51,13 @@ type UserGame struct {
 	attempt       int
 	last_attempt  bool
 	last_letter   string
-	last_state    string
 }
 
-func newUserGame() *UserGame {
+// Constructor
+func New() *Game {
 	id := RandString(KeyLength)
 
-	user := &UserGame{
+	user := &Game{
 		ID:            id,
 		exp:           time.Now().Add(LiveTimeSec * time.Second),
 		word:          []string{},
@@ -48,23 +71,27 @@ func newUserGame() *UserGame {
 }
 
 /*
-	Interface functions. HAVE TO USE lock/unlock into these functions
+	Interface functions: Info(), NewWord(word string), Move(s string).
+	HAVE TO USE lock/unlock into these functions.
+	Only interface functions can use lock/unlock other side we get a race condition.
 */
-
-func (this *UserGame) Info() map[string]interface{} {
+// Info() just returns user info.
+func (this *Game) Info() map[string]interface{} {
 	this.Lock()
 	defer this.Unlock()
-	this.UpTime()
+	this.UpTime() // Player is active, give him more time for session.
 	return this.outData(nil)
 }
 
-func (this *UserGame) NewWord(word string) map[string]interface{} {
+// Starts new game
+func (this *Game) NewWord(word string) map[string]interface{} {
 	this.Lock()
 	defer this.Unlock()
-	this.UpTime()
+	this.UpTime() // Player is active, give him more time for session.
 
-	if this.IsPlayNow() {
-		// TODO a cheat or old cookie
+	// check that player state IS NOT "is_play_now”
+	if this.isPlayNow() {
+		// TODO a cheater or old cookie
 		return this.outData(errors.New("Already in the game"))
 	}
 
@@ -83,29 +110,36 @@ func (this *UserGame) NewWord(word string) map[string]interface{} {
 	return this.outData(nil)
 }
 
-func (this *UserGame) Move(s string) map[string]interface{} {
+func (this *Game) Move(s string) map[string]interface{} {
 	this.Lock()
 	defer this.Unlock()
-	this.UpTime()
+	this.UpTime() // Player is active, give him more time for session.
 
-	// ----> check params start
+	// ----> check params start and conditions
 	this.last_letter = clenerReg.ReplaceAllString(strings.ToLower(s), "")
 
-	if !this.IsPlayNow() {
-		// TODO a cheat or old cookie
+	// check that player state IS "is_play_now”
+	if !this.isPlayNow() {
+		// TODO a cheater or old cookie
 		return this.outData(errors.New("not_in_the_game"))
 	}
 
+	// check correct params.
+	// We also may check it in index.go.
 	if len(this.last_letter) != 1 {
 		return this.outData(errors.New("bad_move"))
 	}
 
+	// check duplicate letter
 	if this.check_letters[this.last_letter] {
 		return this.outData(errors.New("duplicate"))
 	}
-	this.last_letters = append(this.last_letters, this.last_letter)
 	this.check_letters[this.last_letter] = true
-	// <---- check params finish
+
+	// <---- check params start and conditions finish
+
+	// Fix moves data for drawing UI
+	this.last_letters = append(this.last_letters, this.last_letter)
 
 	// Check letter in word
 	find := 0
@@ -133,12 +167,19 @@ func (this *UserGame) Move(s string) map[string]interface{} {
 	return this.outData(nil)
 }
 
+// Exp() returns when the game is expires by timeout
+func (this *Game) Exp() time.Time {
+	this.RLock()
+	defer this.RUnlock()
+	return this.exp
+}
+
 /*
 	Internal functions. DON'T USE lock/unlock into these functions!
 */
 
 // DON'T USE lock/unlock this function
-func (this *UserGame) outData(err error) map[string]interface{} {
+func (this *Game) outData(err error) map[string]interface{} {
 	errstr := ""
 	if err != nil {
 		errstr = fmt.Sprintf("%s", err)
@@ -159,12 +200,12 @@ func (this *UserGame) outData(err error) map[string]interface{} {
 }
 
 // DON'T USE lock/unlock this function
-func (this *UserGame) UpTime() {
+func (this *Game) UpTime() {
 	this.exp = time.Now().Add(LiveTimeSec * time.Second)
 }
 
 // DON'T USE lock/unlock this function
-func (this *UserGame) checkWin() {
+func (this *Game) checkWin() {
 	for i := range this.view_word {
 		if this.view_word[i] != this.word[i] {
 			return
@@ -175,7 +216,7 @@ func (this *UserGame) checkWin() {
 }
 
 // DON'T USE lock/unlock this function
-func (this *UserGame) clean() {
+func (this *Game) clean() {
 	this.last_word = this.word
 	this.word = []string{}
 	this.check_letters = map[string]bool{}
@@ -183,19 +224,19 @@ func (this *UserGame) clean() {
 }
 
 // DON'T USE lock/unlock this function
-func (this *UserGame) win() {
+func (this *Game) win() {
 	this.clean()
 	this.wins++
 	this.last_state = "winner"
 }
 
 // DON'T USE lock/unlock this function
-func (this *UserGame) defeat() {
+func (this *Game) defeat() {
 	this.clean()
 	this.losings++
 	this.last_state = "loser"
 }
 
-func (this *UserGame) IsPlayNow() bool {
+func (this *Game) isPlayNow() bool {
 	return this.last_state == "is_play_now"
 }

@@ -1,17 +1,16 @@
 package Session
 
 import (
+	"game"
 	"sync"
 	"time"
 )
 
-const KeyLength = 10
-const CleanTimeerSec = 60        // 1 minute
-const LiveTimeSec = 60 * 60 * 24 // 1 day
+const CleanTimeerSec = 60 // 1 minute
 
 type Sessions struct {
 	sync.RWMutex
-	data map[string]*UserGame
+	data map[string]*Game.Game
 }
 
 var once sync.Once
@@ -20,7 +19,7 @@ var list *Sessions
 func Start() *Sessions {
 	onceBody := func() {
 		list = &Sessions{
-			data: map[string]*UserGame{},
+			data: map[string]*Game.Game{},
 		}
 		list.StartClean()
 	}
@@ -29,7 +28,7 @@ func Start() *Sessions {
 	return list
 }
 
-func (this *Sessions) FindOrCreate(id string) *UserGame {
+func (this *Sessions) FindOrCreate(id string) *Game.Game {
 
 	if id == "" {
 		return this.Create()
@@ -43,17 +42,17 @@ func (this *Sessions) FindOrCreate(id string) *UserGame {
 	return this.Create()
 }
 
-func (this *Sessions) Get(id string) (*UserGame, bool) {
+func (this *Sessions) Get(id string) (*Game.Game, bool) {
 	this.RLock()
 	defer this.RUnlock()
 	user, find := this.data[id]
 	return user, find
 }
 
-func (this *Sessions) Create() *UserGame {
+func (this *Sessions) Create() *Game.Game {
 	this.Lock()
 	defer this.Unlock()
-	user := newUserGame()
+	user := Game.New()
 	this.data[user.ID] = user
 	return user
 }
@@ -76,7 +75,7 @@ func (this *Sessions) Clean() {
 
 	for k, v := range this.data {
 		v.RLock()
-		if this.data[k].exp.Before(u) {
+		if this.data[k].Exp().Before(u) {
 			delete(this.data, k)
 		}
 		v.RUnlock()

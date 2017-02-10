@@ -9,6 +9,7 @@ import (
 	"strings"
 	"time"
 
+	"game"
 	"session"
 	"words"
 )
@@ -24,7 +25,7 @@ func printData(w http.ResponseWriter, data map[string]interface{}) {
 	w.Write(res)
 }
 
-func initUserGame(w http.ResponseWriter, r *http.Request) *Session.UserGame {
+func initGame(w http.ResponseWriter, r *http.Request) *Game.Game {
 
 	id := ""
 	cookieFrom, err := r.Cookie("id")
@@ -32,32 +33,32 @@ func initUserGame(w http.ResponseWriter, r *http.Request) *Session.UserGame {
 		id = cookieFrom.Value
 	}
 
-	user := Session.Start().FindOrCreate(id)
+	mygame := Session.Start().FindOrCreate(id)
 
 	expiration := time.Now().Add(24 * time.Hour)
-	cookie := http.Cookie{Name: "id", Value: user.ID, Expires: expiration}
+	cookie := http.Cookie{Name: "id", Value: mygame.ID, Expires: expiration}
 	http.SetCookie(w, &cookie)
-	return user
+	return mygame
 }
 
 func newGame(w http.ResponseWriter, r *http.Request) {
-	user := initUserGame(w, r)
+	mygame := initGame(w, r)
 	words := Words.Get()
-	res := user.NewWord(words)
+	res := mygame.NewWord(words)
 	printData(w, res)
 }
 
 func move(w http.ResponseWriter, r *http.Request) {
-	user := initUserGame(w, r)
+	mygame := initGame(w, r)
 	letter := r.FormValue("letter")
 
-	res := user.Move(letter)
+	res := mygame.Move(letter)
 	printData(w, res)
 }
 
 func userInfo(w http.ResponseWriter, r *http.Request) {
-	user := initUserGame(w, r)
-	printData(w, user.Info())
+	mygame := initGame(w, r)
+	printData(w, mygame.Info())
 }
 
 func main() {
