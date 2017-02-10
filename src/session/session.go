@@ -1,7 +1,6 @@
 package Session
 
 import (
-	"fmt"
 	"sync"
 	"time"
 )
@@ -20,7 +19,6 @@ var list *Sessions
 
 func Start() *Sessions {
 	onceBody := func() {
-		fmt.Println("Only once")
 		list = &Sessions{
 			data: map[string]*UserGame{},
 		}

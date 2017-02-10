@@ -3,15 +3,21 @@ SHELL = bash
 
 
 CURDIR = ${PWD}
+export GOPATH=${CURDIR}
 
-all: install start
+all: clean install start
+
+clean:
+	@echo "Clean server" 
+	$(shell rm ./bin/index)
+
 
 install:
 	@echo "Build server" 
-	$(shell rm ./bin/index)
-	$(shell export GOPATH=${CURDIR}; go build -o ./bin/index ./src/index.go)
+	go build -o ./bin/index ./src/index.go
+
 
 start:
 	@echo "Start server" 
-	./bin/index -img ${CURDIR}
+	./bin/index -dir ${CURDIR} -port 19720
 

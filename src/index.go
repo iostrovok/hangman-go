@@ -20,8 +20,6 @@ func printData(w http.ResponseWriter, data map[string]interface{}) {
 		log.Printf("printData: %s\n", err)
 	}
 
-	// fmt.Fprintf(w, "Hi there, I love %s! cookieFrom: %s, %T, ses: %s", r.URL.Path[1:], cookieFrom, cookieFrom, Session.Start())
-	fmt.Printf("res: %s\n", res)
 	w.Header().Set("Content-Type", "application/json")
 	w.Write(res)
 }
@@ -53,8 +51,6 @@ func move(w http.ResponseWriter, r *http.Request) {
 	user := initUserGame(w, r)
 	letter := r.FormValue("letter")
 
-	fmt.Printf("letter: %s\n", letter)
-
 	res := user.Move(letter)
 	printData(w, res)
 }
@@ -66,7 +62,9 @@ func userInfo(w http.ResponseWriter, r *http.Request) {
 
 func main() {
 	var dasedir string
-	flag.StringVar(&dasedir, "img", "./", "Dir with images")
+	var port int
+	flag.StringVar(&dasedir, "dir", "./", "Root dir")
+	flag.IntVar(&port, "port", 19720, "Port")
 	flag.Parse()
 
 	dasedir = strings.TrimRight(dasedir, "/")
@@ -74,6 +72,8 @@ func main() {
 	// Load words from txt file
 	Words.Init(dasedir + "/words.txt")
 
+	fmt.Printf("Port: %d\n", port)
+	fmt.Printf("Base dir: %s\n", dasedir)
 	fmt.Printf("Start with images: %s\n", dasedir+"/html/")
 	fmt.Printf("Start with css: %s\n", dasedir+"/html/"+"css/")
 	fmt.Printf("Start with index file: %s\n", dasedir+"/html/"+"html/index.html")
@@ -87,5 +87,5 @@ func main() {
 	http.HandleFunc("/move", move)
 	http.HandleFunc("/user_info", userInfo)
 
-	http.ListenAndServe(":8080", nil)
+	http.ListenAndServe(fmt.Sprintf(":%d", port), nil)
 }
