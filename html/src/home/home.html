@@ -4,9 +4,14 @@
 </div>
 <div class="row">
     <div class="col-sm-8 blog-main">
-        <div class="blog-post">
-            <a class="blog-nav-item" ui-sref="public.game">
-                <h2 class="blog-post-title">START</h2>
+        <div class="blog-post" ng-if="homeCtrl.isPlayNow">
+            <a class="blog-nav-item" ui-sref="public.game" >
+                <h2 class="blog-post-title">Continue Game</h2>
+            </a>
+        </div>
+        <div class="blog-post" ng-if="!homeCtrl.isPlayNow">
+            <a class="blog-nav-item" ui-sref="public.game" >
+                <h2 class="blog-post-title">Start New Game</h2>
             </a>
         </div>
     </div>

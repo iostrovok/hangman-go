@@ -2,8 +2,8 @@
     "use strict";
 
     angular.module('common', [])
-        .constant('ApiPath', 'http://localhost:80')
         .config(config);
+        /*.constant('ApiPath', 'http://localhost:80')*/
 
     config.$inject = ['$httpProvider'];
 

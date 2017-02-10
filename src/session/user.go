@@ -154,7 +154,7 @@ func (this *UserGame) outData(err error) map[string]interface{} {
 		"last_letter":  this.last_letter,
 		"state":        this.last_state,
 		"error":        errstr,
-		"last_letters": strings.Join(this.last_letters, ", "),
+		"last_letters": this.last_letters,
 	}
 }
 

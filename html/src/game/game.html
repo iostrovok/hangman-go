@@ -2,19 +2,33 @@
     <p class="lead blog-description"></p>
 </div>
 <div class="row" ng-show="gameCtrl.userData.viewData">
-    <div class="col-sm-6 blog-main">
-        <div class="blog-post" >
+    <div class="col-sm-4 blog-main">
+        <div class="blog-post">
+            <h1 class="text-center"><strong>{{gameCtrl.userData.view_word}}</strong></h1>
+            <div class="form-group text-center">
+                <table>
+                    <tr ng-repeat="row in gameCtrl.abc_list">
+                        <td ng-repeat="letter in row">
+                            <button class="btn btn-default" type="submit" ng-click="gameCtrl.Move(letter.val)" ng-show="letter.show">{{ letter.val }}</button>
+                            <button class="btn btn-warning" type="submit" ng-show="!letter.show">{{ letter.val }}</button>
+                        </td>
+                    </tr>
+                </table>
+            </div>
+        </div>
+    </div>
+    <div class="col-sm-4 blog-main">
+        <div class="blog-post text-center">
             <p>Games lost/win {{gameCtrl.userData.losings}}/{{gameCtrl.userData.wins}}</p>
-            <p><strong>Your Word: {{gameCtrl.userData.view_word}} / {{gameCtrl.userData.last_letters}}</strong></p>
-            <form class="form-inline" ng-show="gameCtrl.userData.inGame" ng-show="gameCtrl.userData.inGame">
-                <div class="form-group">
-                    <label class="sr-only" for="newLetter">Letter</label>
-                    <div class="input-group">
-                        <input type="text" class="form-control" id="newLetter" name="newLetter" placeholder="Letter" ng-model="gameCtrl.letter">
-                    </div>
-                </div>
-                <button type="submit" class="btn btn-primary" ng-click="gameCtrl.submit()">Turn</button>
-            </form>
+        </div>
+        <div class="blog-post text-center">
+            <img width="200" height="200" class="img-rounded" border="1" ng-src="/html/images/hangman-{{gameCtrl.userData.attempt}}.png">
+        </div>
+    </div>
+</div>
+<div class="row" ng-show="gameCtrl.userData.viewData">
+    <div class="col-sm-6 blog-main">
+        <div class="blog-post text-center">
             <p ng-show="gameCtrl.userData.viewError" class="danger">
                 <strong>{{gameCtrl.userData.error_message}}</strong>
             </p>
@@ -26,11 +40,6 @@
                 You lost! Word is <strong>{{gameCtrl.userData.last_word}}</strong>
                 <button type="submit" class="btn btn-primary" ng-click="gameCtrl.newGame()">New Game</button>
             </p>
-        </div>
-    </div>
-    <div class="col-sm-6 blog-main">
-        <div class="blog-post" >
-            <img width="200" height="200" class="img-rounded" border="1" ng-src="/html/images/hangman-{{gameCtrl.userData.attempt}}.png">
         </div>
     </div>
 </div>

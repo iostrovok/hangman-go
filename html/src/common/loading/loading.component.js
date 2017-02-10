@@ -1,30 +1,30 @@
 (function() {
-"use strict";
+    "use strict";
 
-angular.module('common')
-.component('loading', {
-  template: '<img src="images/spinner.svg" ng-if="$ctrl.show">',
-  controller: LoadingController
-});
+    angular.module('common')
+        .component('loading', {
+            template: '<img src="/html/images/spinner.svg" ng-if="$ctrl.show">',
+            controller: LoadingController
+        });
 
 
-LoadingController.$inject = ['$rootScope'];
-function LoadingController ($rootScope) {
-  var $ctrl = this;
-  var listener;
+    LoadingController.$inject = ['$rootScope'];
 
-  $ctrl.$onInit = function() {
-    $ctrl.show = false;
-    listener = $rootScope.$on('spinner:activate', onSpinnerActivate);
-  };
+    function LoadingController($rootScope) {
+        var $ctrl = this;
+        var listener;
 
-  $ctrl.$onDestroy = function() {
-    listener();
-  };
+        $ctrl.$onInit = function() {
+            $ctrl.show = false;
+            listener = $rootScope.$on('spinner:activate', onSpinnerActivate);
+        };
 
-  function onSpinnerActivate(event, data) {
-    $ctrl.show = data.on;
-  }
-}
+        $ctrl.$onDestroy = function() {
+            listener();
+        };
 
+        function onSpinnerActivate(event, data) {
+            $ctrl.show = data.on;
+        }
+    }
 })();

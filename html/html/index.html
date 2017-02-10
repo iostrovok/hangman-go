@@ -24,14 +24,6 @@
         <![endif]-->
     </head>
     <body ng-app="words" ng-strict-di>
-        <div class="blog-masthead">
-            <div class="container">
-                <nav class="blog-nav">
-                    <a class="blog-nav-item active" ui-sref="public.home">Home</a>
-                    <a class="blog-nav-item" ui-sref="public.game">My Game</a>
-                </nav>
-            </div>
-        </div>
         <div class="container">
             <ui-view>
                 <div class="blog-header">
@@ -54,11 +46,11 @@
         <script src="/html/src/common/common.module.js"></script>
         <script src="/html/src/common/loading/loading.interceptor.js"></script>
         <script src="/html/src/common/game.data.service.js"></script>
-        <!-- Main Restaurant Module -->
         <script src="/html/src/game.module.js"></script>
         <!-- Public Module -->
         <script src="/html/src/public.module.js"></script>
         <script src="/html/src/public.routes.js"></script>
         <script src="/html/src/game/game.controller.js"></script>
+        <script src="/html/src/home/home.controller.js"></script>
     </body>
 </html>

@@ -14,11 +14,13 @@
         $stateProvider
             .state('public', {
                 absract: true,
-                templateUrl: 'html/src/public.html'
+                templateUrl: '/html/src/public.html'
             })
             .state('public.home', {
                 url: '/',
-                templateUrl: 'html/src/home.html'
+                templateUrl: '/html/src/home/home.html',
+                controller: 'HomeController',
+                controllerAs: 'homeCtrl'
             })
             .state('public.game', {
                 url: '/game/',
